@@ -9,6 +9,8 @@ public class MovieDetails {
     private String mType;
     private String mPlot;
     private String mPoster;
+    private String mGenre;
+    private String mReleased;
 
 
     public MovieDetails(){
@@ -38,6 +40,10 @@ public class MovieDetails {
 
     public String getmPoster() { return mPoster; }
 
+    public String getmGenre() { return mGenre; }
+
+    public String getmReleased() { return mReleased; }
+
     public void setmTitle(String title) {
         this.mTitle = title;
     }
@@ -49,4 +55,10 @@ public class MovieDetails {
     public void setmPoster(String poster) {
         this.mPoster = poster;
     }
+
+    public void setmYear(String year) { this.mYear = year; }
+
+    public void setmGenre(String genre) { this.mGenre = genre; }
+
+    public void setmReleased(String released) { this.mReleased = released; }
 }

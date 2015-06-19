@@ -1,6 +1,7 @@
 package com.example.wwang.movie.fragment;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -122,6 +123,19 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
             // fragment is attached to one) that an item has been selected.
             mListener.onFragmentInteraction(mAdapter.getList().get(position).getmImdbId());
         }
+
+//        parent.setSelection(position);
+//        view.setBackgroundResource(R.color.material_blue_grey_800);
+/*        int len = parent.getCount();
+
+        for(int i=0;i<parent.getCount();i++){
+            View v=parent.getChildAt(i);
+            if (position == i) {
+                v.setBackgroundResource(R.color.material_blue_grey_800);
+            } else {
+                v.setBackgroundResource(R.color.material_deep_teal_200);
+            }
+        }*/
     }
 
     /**

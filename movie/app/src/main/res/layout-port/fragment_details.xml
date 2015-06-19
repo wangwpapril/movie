@@ -9,15 +9,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        android:src="@mipmap/poster"/>
+        />
 
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
+        android:id="@+id/content_scroll"
         android:layout_width="wrap_content"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         android:layout_gravity="bottom|center"
         android:alpha="0.5"
         android:background="@android:color/black"
+        android:visibility="invisible"
         >
 
         <RelativeLayout
@@ -33,19 +35,31 @@
                 android:background="@android:color/transparent"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
-                android:text="@string/hello_blank_fragment" />
+                 />
 
             <TextView
-                android:id="@+id/details_plot"
+                android:id="@+id/details_intro"
                 android:layout_below="@+id/details_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:gravity="bottom|center_horizontal"
+                android:gravity="left"
                 android:background="@android:color/transparent"
                 android:textColor="@android:color/white"
                 android:textSize="15sp"
-                android:text="plot" />
+                 />
+
+            <TextView
+                android:id="@+id/details_plot"
+                android:layout_below="@+id/details_intro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="left"
+                android:background="@android:color/transparent"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                 />
 
         </RelativeLayout>
     </ScrollView>
