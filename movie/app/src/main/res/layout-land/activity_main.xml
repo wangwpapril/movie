@@ -5,6 +5,8 @@
     android:focusableInTouchMode="true"
     android:focusable="true"
     android:orientation="horizontal"
+    android:background="@mipmap/bg"
+
     >
 
     <fragment
