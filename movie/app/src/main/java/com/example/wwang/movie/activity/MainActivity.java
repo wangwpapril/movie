@@ -328,7 +328,11 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
         }
 
         TextView intro = (TextView) detailsFragment.getView().findViewById(R.id.details_intro);
-        intro.setText("(" + movieDetails.getmGenre() + ", " + movieDetails.getmReleased() +")");
+        if(movieDetails.getmGenre() == null && movieDetails.getmReleased() == null){
+            intro.setText("");
+        }else {
+            intro.setText("(" + movieDetails.getmGenre() + ", " + movieDetails.getmReleased() + ")");
+        }
 
         TextView plot = (TextView) detailsFragment.getView().findViewById(R.id.details_plot);
         plot.setText(movieDetails.getmPlot());

@@ -1,5 +1,6 @@
 package com.example.wwang.movie.model;
 
+//Only useful data now, expandable in the future
 public class MovieDetails {
 
     private String mId;
