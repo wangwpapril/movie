@@ -2,6 +2,7 @@ package com.example.wwang.movie.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import java.util.Locale;
 public class MovieListAdapter extends BaseAdapter {
 	private List<MovieItem> datas;
     protected Activity context;
+	private int selectedItem = -1;
 
 	public MovieListAdapter(List<MovieItem> datas,
                             Activity activity) {
@@ -59,6 +61,14 @@ public class MovieListAdapter extends BaseAdapter {
 		MovieItem model = datas.get(position);
 		holder.movieName.setText(model.getmTitle());
 		convertView.setTag(holder);
+
+		if (position == selectedItem) {
+			convertView.setBackgroundColor(Color.CYAN);
+		}
+		else {
+			convertView.setBackgroundColor(Color.TRANSPARENT);
+		}
+
 		return convertView;
 	}
 
@@ -75,4 +85,8 @@ public class MovieListAdapter extends BaseAdapter {
 		public TextView movieName;
 	}
 
+	public void setSelectedItem(int selectedItem) {
+		this.selectedItem = selectedItem;
+		notifyDataSetInvalidated();
+	}
 }

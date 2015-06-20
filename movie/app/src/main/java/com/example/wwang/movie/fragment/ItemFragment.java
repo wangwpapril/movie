@@ -121,21 +121,12 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(mAdapter.getList().get(position).getmImdbId());
+            mListener.onFragmentInteraction(mAdapter.getList().get(position).getmImdbId(), position);
         }
 
-//        parent.setSelection(position);
-//        view.setBackgroundResource(R.color.material_blue_grey_800);
-/*        int len = parent.getCount();
+        mAdapter.setSelectedItem(position);
+//        mAdapter.notifyDataSetInvalidated();
 
-        for(int i=0;i<parent.getCount();i++){
-            View v=parent.getChildAt(i);
-            if (position == i) {
-                v.setBackgroundResource(R.color.material_blue_grey_800);
-            } else {
-                v.setBackgroundResource(R.color.material_deep_teal_200);
-            }
-        }*/
     }
 
     /**
@@ -163,7 +154,7 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+        public void onFragmentInteraction(String id, int position);
     }
 
 }

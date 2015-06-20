@@ -56,9 +56,11 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
 
     private long exitTime;
 
+    //Search string saved for Land/Port exchange
     private Editable inputTxt;
 
-    private int currentIndex;
+    //List item selected saved for Land/Port exchange
+    private int currentIndex = -1;
 
 
     @Override
@@ -79,6 +81,7 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
 
         ItemFragment itemFragment = (ItemFragment) manager.findFragmentById(R.id.fragment_list);
         itemFragment.mAdapter.setList(movieItemList);
+        itemFragment.mAdapter.setSelectedItem(currentIndex);
 
         setDetailsView();
 
@@ -180,8 +183,10 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
     }
 
     @Override
-    public void onFragmentInteraction(String id) {
+    public void onFragmentInteraction(String id, int position) {
 
+        //List item selected
+        currentIndex = position;
         //id returned from ItemFragment is ImdbId
         getMovieDetails(id);
         return;
@@ -226,6 +231,7 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
                         setDetailsView();
                     }else {
                         getMovieDetails(movieItemList.get(0).getmImdbId());
+                        itemFragment.mAdapter.setSelectedItem(0);
                     }
 
  //                   itemFragment.getView().findViewById(R.id.fragment_list).setSelected(true);
@@ -309,16 +315,15 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
         DetailsFragment detailsFragment = (DetailsFragment) manager.findFragmentById(R.id.fragment_detail);
 
         ImageView poster = (ImageView) detailsFragment.getView().findViewById(R.id.details_poster);
-        poster.setVisibility(View.VISIBLE);
-
-        ScrollView contentview = (ScrollView) detailsFragment.getView().findViewById(R.id.content_scroll);
-        contentview.setVisibility(View.VISIBLE);
-
         if(movieDetails.getmPoster() == null || movieDetails.getmPoster().equals("N/A") ) {
             poster.setImageResource(R.mipmap.minions);
         }else{
             Picasso.with(instance).load(movieDetails.getmPoster()).resize(400, 400).centerCrop().into(poster);
         }
+
+
+        ScrollView contentview = (ScrollView) detailsFragment.getView().findViewById(R.id.content_scroll);
+        contentview.setVisibility(View.VISIBLE);
 
         TextView title = (TextView) detailsFragment.getView().findViewById(R.id.details_title);
         if(movieDetails.getmTitle() == null) {
