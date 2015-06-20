@@ -23,7 +23,7 @@
         android:textCursorDrawable="@null"
         android:textSize="22sp"
         android:maxLines="1"
-        android:imeOptions="actionDone"/>
+        android:imeOptions="flagNoFullscreen|flagNoExtractUi"/>
 
     <ListView
         android:id="@android:id/list"
