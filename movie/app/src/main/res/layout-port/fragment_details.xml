@@ -17,8 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="150dp"
         android:layout_gravity="bottom|center"
-        android:alpha="0.5"
-        android:background="@android:color/black"
+        android:alpha="0.6"
+        android:background="#333f48"
         android:visibility="invisible"
         >
 
@@ -56,7 +56,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="left"
-                android:background="@android:color/transparent"
                 android:textColor="@android:color/white"
                 android:textSize="15sp"
                  />

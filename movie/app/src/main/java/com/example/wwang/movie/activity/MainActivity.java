@@ -70,40 +70,6 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
         Common.context = this;
 
         createUI();
-/*        manager = getFragmentManager();
-        transaction = manager.beginTransaction();
-
-        ItemFragment itemFragment = (ItemFragment) manager.findFragmentById(R.id.fragment_list);
-        ClearEditText et = (ClearEditText) itemFragment.getView().findViewById(R.id.search_ed);
-        et.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-                String keyWords = editable.toString().toLowerCase(Locale.getDefault());
-                if (keyWords.length() < 2) {
-                    movieItemList.clear();
-                    ItemFragment itemFragment = (ItemFragment) manager.findFragmentById(R.id.fragment_list);
-                    itemFragment.mAdapter.setList(movieItemList);
-
-                    cleanDetailsView();
-
-                    return;
-                }
-                String url = "http://www.omdbapi.com/?s=" + keyWords;
-                getMovieList(url);
-            }
-        });
-*/
     }
 
     public void createUI(){
@@ -136,6 +102,8 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
                 inputTxt = editable;
 
                 String keyWords = editable.toString().toLowerCase(Locale.getDefault());
+
+                //KeyWord less than 2 chars the API will return error, so clear the movie list
                 if (keyWords.length() < 2) {
                     movieItemList.clear();
                     ItemFragment itemFragment = (ItemFragment) manager.findFragmentById(R.id.fragment_list);
@@ -145,6 +113,8 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
 
                     return;
                 }
+
+                //Should be defined as Constant
                 String url = "http://www.omdbapi.com/?s=" + keyWords;
                 getMovieList(url);
             }
@@ -159,6 +129,7 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
         ItemFragment itemFragment = (ItemFragment) manager.findFragmentById(R.id.fragment_list);
         DetailsFragment detailsFragment = (DetailsFragment) manager.findFragmentById(R.id.fragment_detail);
 
+        //fragment need to be removed manually otherwise it will keep alive and the re-layout will fail
         if(itemFragment != null || detailsFragment != null) {
             transaction = manager.beginTransaction();
             if (itemFragment != null) {
@@ -211,6 +182,7 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
     @Override
     public void onFragmentInteraction(String id) {
 
+        //id returned from ItemFragment is ImdbId
         getMovieDetails(id);
         return;
     }
@@ -221,6 +193,7 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
             public void handleSuccess(String content){
 
                 JSONObject des;
+                //Need to clear the movie list once start search movie list
                 movieItemList.clear();
 
                 try {
@@ -247,11 +220,17 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
                     ItemFragment itemFragment = (ItemFragment) manager.findFragmentById(R.id.fragment_list);
                     itemFragment.mAdapter.setList(movieItemList);
 
-                    if(!movieItemList.isEmpty())
+                    //Display the 1st Movie's details upon the movie list available
+                    if(movieItemList.isEmpty()){
+                        movieDetails = new MovieDetails();
+                        setDetailsView();
+                    }else {
                         getMovieDetails(movieItemList.get(0).getmImdbId());
+                    }
 
  //                   itemFragment.getView().findViewById(R.id.fragment_list).setSelected(true);
 
+                    //After the movie list available, the input keyboard need to be hidden
                     InputMethodManager imm = (InputMethodManager) instance.getSystemService(Context.INPUT_METHOD_SERVICE);
                     if (imm.isActive()) {
                         imm.hideSoftInputFromWindow(itemFragment.getView().getWindowToken(), 0);
@@ -266,7 +245,6 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
             }
 
             public void handleError(Exception e){
-
                 StringUtil.showAlertDialog("MovieList", "Data error ! Please check your network", instance);
                 return;
 
@@ -289,35 +267,17 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
                 JSONObject mds;
                 try {
                     mds = new JSONObject(content);
+
+                    //For the time being only retrieve those data used for UI
                     movieDetails.setmTitle(mds.optString("Title"));
                     movieDetails.setmPlot(mds.optString("Plot"));
                     movieDetails.setmPoster(mds.optString("Poster"));
                     movieDetails.setmGenre(mds.optString("Genre"));
                     movieDetails.setmReleased(mds.optString("Released"));
 
+                    //Once the details data available, display
                     setDetailsView();
 
-/*                    DetailsFragment detailsFragment = (DetailsFragment) manager.findFragmentById(R.id.fragment_detail);
-                    ImageView poster = (ImageView) detailsFragment.getView().findViewById(R.id.details_poster);
-                    ScrollView contentview = (ScrollView) detailsFragment.getView().findViewById(R.id.content_scroll);
-                    contentview.setVisibility(View.VISIBLE);
-
-                    if(movieDetails.getmPoster().equals("N/A") ) {
-                        poster.setImageResource(R.mipmap.poster);
-                    }else{
-                        Picasso.with(instance).load(movieDetails.getmPoster()).resize(400, 400).centerCrop().into(poster);
-
-                    }
-
-                    TextView title = (TextView) detailsFragment.getView().findViewById(R.id.details_title);
-                    title.setText(movieDetails.getmTitle());
-
-                    TextView intro = (TextView) detailsFragment.getView().findViewById(R.id.details_intro);
-                    intro.setText("(" + movieDetails.getmGenre() + ", " + movieDetails.getmReleased() +")");
-
-                    TextView plot = (TextView) detailsFragment.getView().findViewById(R.id.details_plot);
-                    plot.setText(movieDetails.getmPlot());
-*/
                 } catch (JSONException e) {
                     StringUtil.showAlertDialog("MovieDetails", "Data error ! Please check your network", instance);
                     e.printStackTrace();
@@ -326,13 +286,11 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
             }
 
             public void handleError(Exception e){
-
                 StringUtil.showAlertDialog("MovieDetails", "Data error ! Please check your network", instance);
                 return;
 
             }
         };
-
 
         ControllerContentTask cct = new ControllerContentTask(
                 "http://www.omdbapi.com/?i="+ id +"&plot=full&r=json", icc,
@@ -349,18 +307,25 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
 
         manager = getFragmentManager();
         DetailsFragment detailsFragment = (DetailsFragment) manager.findFragmentById(R.id.fragment_detail);
+
         ImageView poster = (ImageView) detailsFragment.getView().findViewById(R.id.details_poster);
+        poster.setVisibility(View.VISIBLE);
+
         ScrollView contentview = (ScrollView) detailsFragment.getView().findViewById(R.id.content_scroll);
         contentview.setVisibility(View.VISIBLE);
 
         if(movieDetails.getmPoster() == null || movieDetails.getmPoster().equals("N/A") ) {
-            poster.setImageResource(R.mipmap.poster);
+            poster.setImageResource(R.mipmap.minions);
         }else{
             Picasso.with(instance).load(movieDetails.getmPoster()).resize(400, 400).centerCrop().into(poster);
         }
 
         TextView title = (TextView) detailsFragment.getView().findViewById(R.id.details_title);
-        title.setText(movieDetails.getmTitle());
+        if(movieDetails.getmTitle() == null) {
+            title.setText("N/A");
+        }else {
+            title.setText(movieDetails.getmTitle());
+        }
 
         TextView intro = (TextView) detailsFragment.getView().findViewById(R.id.details_intro);
         intro.setText("(" + movieDetails.getmGenre() + ", " + movieDetails.getmReleased() +")");
@@ -373,9 +338,10 @@ public class MainActivity extends ActionBarActivity implements ItemFragment.OnFr
     public void cleanDetailsView(){
         DetailsFragment detailsFragment = (DetailsFragment) manager.findFragmentById(R.id.fragment_detail);
         ImageView poster = (ImageView) detailsFragment.getView().findViewById(R.id.details_poster);
-        poster.setVisibility(View.INVISIBLE);
+        poster.setImageResource(R.mipmap.minions);
         ScrollView contentview = (ScrollView) detailsFragment.getView().findViewById(R.id.content_scroll);
         contentview.setVisibility(View.INVISIBLE);
+        movieDetails = new MovieDetails();
 
     }
 
